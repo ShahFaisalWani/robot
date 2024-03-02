@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  ros2:
+    build: .
+    network_mode: host
+    ipc: host
+    tty: true
+    privileged: true
+    image: humble-desktop
+    container_name: ros2
+    devices:
+      - /dev/tty.usbserial-0001:/dev/ttyUSB0
+    environment:
+      - DISPLAY=${IP}:0.0
