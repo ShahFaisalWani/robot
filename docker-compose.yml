@@ -3,13 +3,30 @@ version: '3'
 services:
   ros2:
     build: .
-    network_mode: host
     ipc: host
     tty: true
     privileged: true
     image: humble-desktop
     container_name: ros2
-    devices:
-      - /dev/tty.usbserial-0001:/dev/ttyUSB0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    # devices:
+    #   - /dev/ttyUSB0:/dev/ttyUSB0
     environment:
-      - DISPLAY=${IP}:0.0
+      - DISPLAY=novnc:0.0
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - QT_X11_NO_MITSHM=1
+    networks:
+      - x11
+  novnc:  
+    image: theasp/novnc:latest
+    environment:
+      - DISPLAY_WIDTH=1700
+      - DISPLAY_HEIGHT=1728
+    ports:
+      - "8080:8080"
+    networks:
+      - x11
+networks:
+  x11:
